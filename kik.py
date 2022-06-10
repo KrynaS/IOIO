@@ -1,6 +1,7 @@
 
 
 from distutils.log import error
+from operator import contains
 from paho.mqtt import client as mqtt_client
 from enum import Enum
 
@@ -93,6 +94,14 @@ def subscribe(client: mqtt_client):
                 client.publish("gameserver", game.playersCount)
             else:
                 client.publish("gameserver", "player" + str(game.turn))
+        if msgString.startswith("1"):
+            move = msgString.split()[1]
+            game.putMarker(int(move), 1)
+            client.publish("gameserver", str(move) + " 1")
+        if msgString.startswith("2"):
+            move = msgString.split()[1]
+            game.putMarker(int(move), 1)
+            client.publish("gameserver", str(move) + " 2")
 
 
     client.subscribe('gameclients')
